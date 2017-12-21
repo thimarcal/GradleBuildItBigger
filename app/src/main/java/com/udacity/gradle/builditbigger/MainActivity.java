@@ -1,8 +1,10 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,7 +14,7 @@ import nanodegree.thiago.andjoke.JokeUiAcivity;
 import nanodegree.thiago.jokeslib.Jokes;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RetrieveJokeTask.JokeReceivedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +46,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        String joke = Jokes.getJoke();
+        new RetrieveJokeTask(this).execute(new Pair<Context, String>(this, null));
+    }
 
+
+    @Override
+    public void onJokeReceived(String joke) {
         Intent jokeActivityIntent = new Intent(this, JokeUiAcivity.class);
         jokeActivityIntent.putExtra(getString(R.string.joke_extra), joke);
 
         startActivity(jokeActivityIntent);
     }
-
-
 }
